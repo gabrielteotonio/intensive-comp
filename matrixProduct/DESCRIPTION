@@ -1,0 +1,19 @@
+Package: matrixProduct
+Type: Package
+Title: Multiple methods for matrix product
+Version: 0.1
+Date: 2020-08-29
+Author: Gabriel Teotonio
+Maintainer: Gabriel Teotonio <gabriel.harrison@ufpe.br>
+Description: Implement a variety of function to excute matrix product, by using 
+             default operators and makes use of multithreading for speed.
+License: GPL (>= 2)
+Imports: Rcpp (>= 1.0.5), doParallel, foreach, parallel, RcppParallel
+Depends: doParallel, foreach, parallel
+LinkingTo: Rcpp, RcppArmadillo, RcppParallel
+RoxygenNote: 7.1.1
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
+SystemRequirements: GNU make

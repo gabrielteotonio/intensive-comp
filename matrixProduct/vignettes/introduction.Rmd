@@ -1,0 +1,87 @@
+---
+title: "Matrix Product Performance"
+author: "Gabriel Teotonio"
+date: "August 29, 2020"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{introduction}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+
+devtools::load_all(".")
+```
+
+## Introduction
+In linear algebra we are concerned about linear equations such as:  
+$$a_1x_1 + \dots + a_nx_n = b, $$
+and their representations through matrices. When we talk about machine learning algorithms, most of them have linear algebra and matrix calculation in its core, e.g. regression when is necessary to find the solution of $Y = X B + \varepsilon$, neural nets needs to execute a number of matrix product operations for each layer considered, and others.  
+With this in mind I implemented a variety of algorithms to analyze the performance of processing in relation to speed. Multiple approaches are considered, including C++ [Armadillo](http://arma.sourceforge.net/docs.html) library and different parallel back-ends.  The following R package named **matrixProduc** gathers all the development. The **microbenchmark** and **ggplot2** packages will help us to measure that performance.
+
+```{r setup}
+library(matrixProduct)
+library(microbenchmark)
+library(ggplot2)
+library(patchwork)
+```
+
+
+## Approaches  
+Here, I consider two possible ways: lower-level and parallelism way. So we can build our code in a faster language than R, like C++, try to parallelize  the code in R or even both.
+
+### Lower-level way
+```{r lower, echo=TRUE, message=FALSE, fig.width=6, fig.height=4, cache=TRUE}
+trials <- 1000
+result <- data.frame()
+
+for (i in 1:trials) {
+  mat_1 <- matrix(runif(100, 0, 1), 10, 10)
+  mat_2 <- matrix(runif(100, 0, 1), 10, 10)  
+  res <- microbenchmark(Rbase = mat_1 %*% mat_2,
+                        ArmadilloBase = matrixProduct::ArmaBase(mat_1, mat_2),
+                        ArmadilloIterator = matrixProduct::ArmaColumnRow(mat_1, mat_2),
+                        times = 10
+                       )
+  
+  result <- rbind(result, res)
+  
+}
+
+p <- ggplot(aes(x =  reorder(expr, time, FUN=median), y = time, fill = expr), data = result) + 
+  geom_boxplot() + labs(x = "Method", y = "Time in nanoseconds")
+q <- ggplot2::autoplot(result) 
+p / q
+```
+
+### Parallelism way
+```{r parallel, echo=TRUE, message=FALSE, fig.width=6, fig.height=4, cache=TRUE}
+trials_par <- 1000
+result_par <- data.frame()
+niter <- 4
+
+for (i in 1:trials_par) {
+  mat_1 <- matrix(runif(100, 0, 1), 10, 10)
+  mat_2 <- matrix(runif(100, 0, 1), 10, 10)  
+  res <- microbenchmark(RparallelRow = matrixProduct::ParallelRow(mat_1, mat_2, niter),
+                        RparallelColumn = matrixProduct::ParallelColumn(mat_1, mat_2, niter),
+                        RcppParallel = matrixProduct::RcppParallel(mat_1, t(mat_2), niter),
+                        RcppOpenMP = matrixProduct::RcppOpenMP(mat_1, mat_2, niter),
+                        times = 10
+                       )
+  
+  result_par <- rbind(result_par, res)
+  
+}
+
+p <- ggplot(aes(x =  reorder(expr, time, FUN=median), y = time, fill = expr), data = result_par) + 
+  geom_boxplot() + labs(x = "Method", y = "Time in nanoseconds")
+q <- ggplot2::autoplot(result_par) 
+p / q
+```
+
