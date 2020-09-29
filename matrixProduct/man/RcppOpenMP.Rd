@@ -4,7 +4,7 @@
 \alias{RcppOpenMP}
 \title{Product of two matrices}
 \usage{
-RcppOpenMP(mat_1, mat_2, t)
+RcppOpenMP(mat_1, mat_2, t = 1)
 }
 \arguments{
 \item{mat_1}{First one matrix}

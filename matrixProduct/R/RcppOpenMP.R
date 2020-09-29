@@ -7,12 +7,12 @@
 #' @param mat_2 Second one matrix
 #' @return A matrix with matrix product result  
 #' @export
-RcppOpenMP <- function(mat_1, mat_2, t) {
+RcppOpenMP <- function(mat_1, mat_2, t = 1) {
   
   stopifnot(exists("mat_1"))
   stopifnot(exists("mat_2"))
   
-  val <- OpenMP(mat_1, mat_2, t = 1)
+  val <- OpenMP(mat_1, mat_2, t)
   
   invisible(val)
 }

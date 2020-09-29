@@ -1,8 +1,0 @@
-base
-foreach
-iterators
-doParallel
-matrixProduct
-microbenchmark
-ggplot2
-patchwork

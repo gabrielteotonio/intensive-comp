@@ -9,8 +9,8 @@ ArmaColumnRow <- function(mat_1, mat_2) {
     .Call(`_matrixProduct_ArmaColumnRow`, mat_1, mat_2)
 }
 
-RcppOpenMP <- function(mat_1, mat_2, t = 1L) {
-    .Call(`_matrixProduct_RcppOpenMP`, mat_1, mat_2, t)
+OpenMP <- function(mat_1, mat_2, t = 1L) {
+    .Call(`_matrixProduct_OpenMP`, mat_1, mat_2, t)
 }
 
 RcppParallelLoop <- function(mat_1, mat_2) {

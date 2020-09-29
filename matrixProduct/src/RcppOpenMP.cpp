@@ -3,7 +3,7 @@
 #include <omp.h>
 
 // [[Rcpp::export]]
-arma::mat RcppOpenMP(const arma::mat& mat_1, const arma::mat& mat_2, int t = 1) {
+arma::mat OpenMP(const arma::mat& mat_1, const arma::mat& mat_2, int t = 1) {
   int n = mat_1.n_rows, m = mat_2.n_cols;
   omp_set_num_threads(t);
   arma::mat rmat(n, m);
