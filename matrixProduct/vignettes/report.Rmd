@@ -14,6 +14,8 @@ knitr::opts_chunk$set(
 devtools::load_all(".")
 ```
 
+![](image_report.png)
+
 ## Introduction
 In linear algebra we are concerned about linear equations such as:  
 $$a_1x_1 + \dots + a_nx_n = b, $$
@@ -25,7 +27,6 @@ library(matrixProduct)
 library(microbenchmark)
 library(pryr)
 library(ggplot2)
-library(patchwork)
 library(readr)
 library(dplyr)
 ```
@@ -246,7 +247,8 @@ results <- union(results_sequential, results_parallel) %>%
   mutate(time = log(time)) 
 ```
 
-We have the following results...  
+We have the following results. We consider 8 processors to run the experiments in parallel. On the left plot we can see the comparison among all the methods, combining garbage collector or no. The Rbase method achieved the smallest median, being its no gc version a little bit better. Even the RcppOpenMP and RcppParallel methods failing to achieve the performance of Rbase, its variance are smaller and this may suggest that they can be useful in some scenarios.  Also we can see that forces R to execute garbage collector may insert overhead in our calculation. In the second plot its possible to compare sequential and parallel processes. The distribution of each one has different aspects. For parallel, we have a distribution with a positive assymetry, while the sequential version has a negative one. However, their 3rd-quantile are, approximately, equal.
+
 
 ```{r plots_1, echo=FALSE, warning=FALSE, message=FALSE, fig.height=3, fig.width=4.7}
 p <- results %>% 
@@ -268,8 +270,7 @@ q
 
 
 
-And ...  
-
+The memory used by R to execute ou simulation is also affected by the version within garbage collector. On the left we have a scatter plot of memory used (above the min) and time required to run. The observations in `seq_gc` and `par_gc` required more memory to run the simulation. In particular, some observations of `seq_gc` used 20% more memory than its version without gc.
 ```{r plots_2, echo=FALSE, warning=FALSE, message=FALSE, fig.height=3, fig.width=4.7}
 p <- results %>% 
   ggplot(aes(x=memory_used, y=time, color=run)) +
