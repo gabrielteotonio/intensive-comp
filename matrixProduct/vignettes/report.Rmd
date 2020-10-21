@@ -476,7 +476,7 @@ q
 
 
 ### Boosting Rccp Open MP
-The Rcpp Open MP method was the best among the parallel versions of the operation. So we decided to understand which would be the best number of threads to achieve the goal performance. We took the Rbase version for baseline comparison purpose. Above we can see a table summarizing the results. The interesting result is that the version without parallel backend had the lowest median, followed  by 4 and 2 threads.
+The Rcpp Open MP method was the best among the parallel versions of the operation. So we decided to understand which would be the best number of threads to achieve the goal performance. We took the Rbase (median red line) version for baseline comparison purpose. Above we can see a table summarizing the results. The interesting result is that the version without parallel backend had the lowest median, followed  by 4 and 2 threads.
 
 ```{r results_openmp, echo=FALSE, warning=FALSE, message=FALSE}
 results_openmp <- read_csv("results/results_openmp.csv") %>% 
@@ -500,12 +500,14 @@ results_openmp %>%
 
 Below is a graph to illustrate the data seen in the table.  
 
-```{r plots_1_openmp, echo=FALSE, warning=FALSE, message=FALSE, fig.height=3, fig.width=4.7}
+```{r plots_1_openmp, echo=FALSE, warning=FALSE, message=FALSE, fig.height=5, fig.width=7}
 p <- results_openmp %>% 
-  ggplot(aes(x=expr, y=time)) +
+  filter(expr != "Rbase") %>% 
+  ggplot(aes(x=reorder(expr, time, FUN = median), y=time)) +
   geom_boxplot() +
+  geom_hline(yintercept = 9.430439, color = "red") +
   labs(x="Method", y="Time", fill = "Run") + 
-  theme(axis.text.x = element_text(angle = 65))
+  theme(axis.text.x = element_text(angle = 30))
 
 p
 ```

@@ -9,6 +9,10 @@ ArmaColumnRow <- function(mat_1, mat_2) {
     .Call(`_matrixProduct_ArmaColumnRow`, mat_1, mat_2)
 }
 
+fastLm <- function(X, y) {
+    .Call(`_matrixProduct_fastLm`, X, y)
+}
+
 OpenMP <- function(mat_1, mat_2, t = 1L) {
     .Call(`_matrixProduct_OpenMP`, mat_1, mat_2, t)
 }

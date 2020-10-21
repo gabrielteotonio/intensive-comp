@@ -30,6 +30,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// fastLm
+arma::vec fastLm(const arma::mat& X, const arma::vec& y);
+RcppExport SEXP _matrixProduct_fastLm(SEXP XSEXP, SEXP ySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type X(XSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type y(ySEXP);
+    rcpp_result_gen = Rcpp::wrap(fastLm(X, y));
+    return rcpp_result_gen;
+END_RCPP
+}
 // OpenMP
 arma::mat OpenMP(const arma::mat& mat_1, const arma::mat& mat_2, int t);
 RcppExport SEXP _matrixProduct_OpenMP(SEXP mat_1SEXP, SEXP mat_2SEXP, SEXP tSEXP) {
@@ -59,6 +71,7 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_matrixProduct_ArmaBase", (DL_FUNC) &_matrixProduct_ArmaBase, 2},
     {"_matrixProduct_ArmaColumnRow", (DL_FUNC) &_matrixProduct_ArmaColumnRow, 2},
+    {"_matrixProduct_fastLm", (DL_FUNC) &_matrixProduct_fastLm, 2},
     {"_matrixProduct_OpenMP", (DL_FUNC) &_matrixProduct_OpenMP, 3},
     {"_matrixProduct_RcppParallelLoop", (DL_FUNC) &_matrixProduct_RcppParallelLoop, 2},
     {NULL, NULL, 0}
